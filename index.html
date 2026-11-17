@@ -1,0 +1,820 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BIGC - Benny Istanto Geospatial Consulting</title>
+<meta name="description" content="Benny Istanto Geospatial Consulting (BIGC) is a specialist practice bridging climate science and geospatial technology: GIS, remote sensing, climate risk analytics and early warning.">
+<link rel="canonical" href="https://bigc.science/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://bigc.science/">
+<meta property="og:title" content="BIGC - Benny Istanto Geospatial Consulting">
+<meta property="og:description" content="Weather, land and risk, drawn to scale. A specialist practice bridging climate science and geospatial technology.">
+<meta property="og:image" content="https://bigc.science/assets/bigc-logo-light.png">
+<meta name="theme-color" content="#F4EFE6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#171412" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "Benny Istanto Geospatial Consulting",
+  "alternateName": "BIGC",
+  "legalName": "PT BENNY ISTANTO GEOSPATIAL CONSULTING",
+  "url": "https://bigc.science/",
+  "email": "benny@istan.to",
+  "logo": "https://bigc.science/assets/bigc-logo-light.png",
+  "founder": { "@type": "Person", "name": "Benny Istanto", "url": "https://benny.istan.to/" }
+}
+</script>
+<script>document.documentElement.classList.add('js');</script>
+<style>
+:root {
+  --paper: #F4EFE6;
+  --paper-2: #EDE6DA;
+  --ink: #2B2523;
+  --muted: #776C63;
+  --line: rgba(43, 37, 35, .17);
+  --accent: #F0881A;
+  --accent-ink: #AD5700;
+  --serif: "Fraunces", "Iowan Old Style", Georgia, serif;
+  --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --pad: clamp(28px, 6vw, 84px);
+  --frame: 12px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #171412;
+    --paper-2: #1F1B18;
+    --ink: #EDE6DA;
+    --muted: #9E9389;
+    --line: rgba(237, 230, 218, .17);
+    --accent-ink: #F59A36;
+  }
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 400 1.0625rem/1.6 var(--sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+a { color: inherit; text-decoration-color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: .22em; }
+a:hover { color: var(--accent-ink); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+::selection { background: var(--accent); color: #1b1512; }
+h1, h2, h3, p, ul, dl, dd, figure { margin: 0; }
+ul { padding: 0; list-style: none; }
+img { max-width: 100%; height: auto; display: block; }
+.mono { font: 400 .72rem/1.4 var(--mono); letter-spacing: .09em; text-transform: uppercase; }
+.wrap { width: 100%; max-width: 1240px; margin: 0 auto; padding: 0 var(--pad); }
+
+/* ---------- neatline frame: the page is a map sheet ---------- */
+.neatline {
+  position: fixed; inset: var(--frame); z-index: 50; pointer-events: none;
+  border: 1px solid var(--ink);
+}
+.neatline::before, .neatline::after {
+  content: ""; position: absolute; left: 0; right: 0; height: 5px;
+  background: repeating-linear-gradient(90deg, var(--ink) 0 1px, transparent 1px calc(100% / 46));
+  opacity: .55;
+}
+.neatline::before { top: 0; }
+.neatline::after { bottom: 0; }
+.neatline span {
+  position: absolute; background: var(--paper); padding: 0 .7em; white-space: nowrap;
+  font: 400 .66rem/1 var(--mono); letter-spacing: .1em; text-transform: uppercase;
+}
+.nl-tl { top: -.36em; left: 1.6em; }
+.nl-tr { top: -.36em; right: 1.6em; font-variant-numeric: tabular-nums; }
+.nl-bl { bottom: -.36em; left: 1.6em; }
+.nl-br { bottom: -.36em; right: 1.6em; }
+.nl-br b { color: var(--accent-ink); font-weight: 500; }
+@media (max-width: 640px) {
+  :root { --frame: 7px; }
+  .nl-tl, .nl-bl { display: none; }
+  .nl-tr, .nl-br { right: 1em; }
+}
+
+/* ---------- hero ---------- */
+.hero { position: relative; min-height: 100svh; display: flex; flex-direction: column; isolation: isolate; }
+#relief {
+  position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1;
+  -webkit-mask-image: linear-gradient(100deg, rgba(0,0,0,.12) 0%, rgba(0,0,0,.3) 38%, #000 78%), linear-gradient(#000 70%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(100deg, rgba(0,0,0,.12) 0%, rgba(0,0,0,.3) 38%, #000 78%), linear-gradient(#000 70%, transparent);
+  mask-composite: intersect;
+}
+.topbar { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-top: clamp(34px, 5vw, 56px); }
+.topbar img { height: clamp(58px, 7vw, 84px); width: auto; }
+.topbar nav { display: flex; gap: clamp(14px, 2.4vw, 34px); }
+.topbar nav a { text-decoration: none; padding: .5em 0; border-bottom: 1px solid transparent; }
+.topbar nav a:hover { border-bottom-color: var(--accent); }
+@media (max-width: 640px) { .topbar nav a:not(.keep) { display: none; } }
+
+.hero-main { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-block: clamp(48px, 8vw, 96px); }
+.eyebrow { color: var(--muted); margin-bottom: 1.8rem; display: flex; align-items: center; gap: .9em; }
+.eyebrow::before { content: ""; width: 34px; height: 1px; background: var(--accent); }
+h1 {
+  font: 340 clamp(2.7rem, 7.6vw, 6.6rem)/.98 var(--serif);
+  font-variation-settings: "opsz" 144;
+  letter-spacing: -.028em;
+  max-width: 13ch;
+  text-wrap: balance;
+}
+h1 em { font-style: italic; font-weight: 300; color: var(--accent-ink); }
+.lede { max-width: 54ch; margin-top: clamp(1.6rem, 3vw, 2.4rem); font-size: clamp(1.05rem, 1.4vw, 1.2rem); color: color-mix(in srgb, var(--ink) 86%, var(--paper)); }
+.lede strong { font-weight: 500; }
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 28px; margin-top: clamp(1.8rem, 3.4vw, 2.8rem); }
+.btn {
+  display: inline-flex; align-items: center; gap: .8em; text-decoration: none;
+  background: var(--ink); color: var(--paper); padding: 1.05em 1.5em;
+  transition: background .25s, color .25s;
+}
+.btn::after { content: "\2192"; font-family: var(--sans); font-size: 1.15em; line-height: 0; transition: transform .25s; }
+.btn:hover { background: var(--accent); color: #1b1512; }
+.btn:hover::after { transform: translateX(4px); }
+
+.facts { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--ink); margin-bottom: clamp(30px, 4vw, 48px); background: color-mix(in srgb, var(--paper) 82%, transparent); }
+.facts div { padding: 1.1rem 1.2rem 0 0; }
+.facts div + div { padding-left: 1.2rem; border-left: 1px solid var(--line); }
+.facts b { display: block; font: 380 clamp(1.7rem, 3.2vw, 2.6rem)/1.1 var(--serif); font-variation-settings: "opsz" 144; letter-spacing: -.02em; }
+.facts span { display: block; margin-top: .5rem; color: var(--muted); max-width: 22ch; }
+@media (max-width: 760px) {
+  .facts { grid-template-columns: 1fr 1fr; }
+  .facts div { padding-bottom: 1rem; }
+  .facts div:nth-child(3) { padding-left: 0; border-left: 0; }
+  .facts div:nth-child(n+3) { border-top: 1px solid var(--line); }
+}
+
+/* ---------- sections ---------- */
+section { padding-block: clamp(76px, 11vw, 150px); border-top: 1px solid var(--line); }
+.head { display: grid; grid-template-columns: minmax(150px, 1fr) 3fr; gap: 24px 40px; margin-bottom: clamp(40px, 6vw, 76px); }
+.head .mono { color: var(--muted); padding-top: .9em; }
+.head .mono b { color: var(--accent-ink); font-weight: 500; }
+h2 { font: 340 clamp(2rem, 4.6vw, 3.7rem)/1.04 var(--serif); font-variation-settings: "opsz" 144; letter-spacing: -.024em; max-width: 18ch; text-wrap: balance; }
+h2 em { font-weight: 300; color: var(--accent-ink); }
+.head p { margin-top: 1.4rem; max-width: 58ch; color: color-mix(in srgb, var(--ink) 80%, var(--paper)); }
+@media (max-width: 760px) { .head { grid-template-columns: 1fr; } .head .mono { padding-top: 0; } }
+
+/* legend (services) */
+.legend li {
+  display: grid; grid-template-columns: 108px minmax(0, 1.15fr) minmax(0, 1fr); gap: 20px 40px; align-items: start;
+  padding: clamp(24px, 3vw, 38px) 0; border-top: 1px solid var(--line);
+  transition: background .3s;
+}
+.legend li:last-child { border-bottom: 1px solid var(--line); }
+.legend li:hover { background: linear-gradient(90deg, transparent, var(--paper-2) 30%, var(--paper-2) 70%, transparent); }
+.swatch { width: 96px; height: 64px; border: 1px solid var(--ink); color: var(--ink); background: var(--paper); }
+.swatch svg { display: block; width: 100%; height: 100%; }
+.swatch .o { stroke: var(--accent); } .swatch .of { fill: var(--accent); }
+.legend h3 { font: 400 clamp(1.35rem, 2.2vw, 1.8rem)/1.15 var(--serif); letter-spacing: -.012em; }
+.legend h3 + p { margin-top: .7rem; max-width: 40ch; color: color-mix(in srgb, var(--ink) 80%, var(--paper)); }
+.legend .key { color: var(--muted); margin-bottom: .5rem; }
+.legend ul li { display: block; padding: .32rem 0 .32rem 1.5em; border: 0; position: relative; font-size: .97rem; line-height: 1.45; }
+.legend ul li:last-child { border: 0; }
+.legend ul li:hover { background: none; }
+.legend ul li::before { content: "+"; position: absolute; left: 0; color: var(--accent-ink); font-family: var(--mono); }
+@media (max-width: 860px) {
+  .legend > li { grid-template-columns: 76px minmax(0, 1fr); gap: 16px 20px; }
+  .swatch { width: 76px; height: 51px; }
+  .legend > li > div:last-child { grid-column: 2; }
+}
+
+/* record of service (timeline) */
+.gantt { position: relative; --label: 290px; }
+.g-axis { position: absolute; top: 0; bottom: 0; left: var(--label); right: 0; pointer-events: none; }
+.g-axis i { position: absolute; top: 0; bottom: 0; border-left: 1px dashed var(--line); font: 400 .66rem/1 var(--mono); font-style: normal; letter-spacing: .08em; color: var(--muted); padding-left: .5em; }
+.g-rows { padding-top: 26px; }
+.g-row { display: grid; grid-template-columns: var(--label) 1fr; align-items: center; border-top: 1px solid var(--line); min-height: 44px; cursor: default; outline-offset: -2px; }
+.g-row:last-child { border-bottom: 1px solid var(--line); }
+.g-row .name { padding: .6rem 1rem .6rem 0; font-size: .97rem; line-height: 1.3; transition: color .2s; }
+.g-row .track { position: relative; height: 100%; min-height: 44px; }
+.g-row .bar { position: absolute; top: 50%; height: 10px; margin-top: -5px; min-width: 5px; background: var(--ink); box-shadow: 0 0 0 1.5px var(--paper); transition: background .2s, height .2s, margin .2s; }
+.g-row .bar.now::after { content: ""; position: absolute; right: -9px; top: 50%; margin-top: -5px; border: 5px solid transparent; border-left: 8px solid var(--ink); border-right: 0; transition: border-color .2s; }
+.g-row:hover .name, .g-row.on .name { color: var(--accent-ink); }
+.g-row:hover .bar, .g-row.on .bar { background: var(--accent); height: 16px; margin-top: -8px; }
+.g-row:hover .bar.now::after, .g-row.on .bar.now::after { border-left-color: var(--accent); }
+.g-group { margin: 34px 0 10px; color: var(--muted); position: relative; background: var(--paper); display: inline-block; padding-right: 1em; z-index: 1; }
+.g-group:first-child { margin-top: 0; }
+.readout { margin-top: 26px; padding: 18px 20px; border: 1px solid var(--ink); min-height: 6.2em; display: grid; grid-template-columns: auto 1fr; gap: 6px 22px; align-content: start; }
+.readout .mono { color: var(--muted); padding-top: .25em; }
+.readout b { font: 400 1.25rem/1.2 var(--serif); grid-column: 2; }
+.readout ul { grid-column: 2; font-size: .95rem; }
+.readout li { padding: .12rem 0; }
+.readout li span { color: var(--muted); font: 400 .78rem var(--mono); margin-right: .9em; white-space: nowrap; }
+.aside-note { margin-top: 22px; color: var(--muted); font-size: .93rem; max-width: 70ch; }
+@media (max-width: 860px) {
+  .gantt { --label: 0px; }
+  .g-row { grid-template-columns: 1fr; }
+  .g-row .name { padding: .7rem 0 0; }
+  .g-row .track { min-height: 30px; }
+  .readout { grid-template-columns: 1fr; }
+  .readout b, .readout ul { grid-column: 1; }
+  .readout li span { display: block; }
+}
+
+/* plates (selected work) */
+.plates { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(36px, 5vw, 64px) clamp(20px, 3vw, 36px); }
+.plate { text-decoration: none; display: block; }
+.plate .img { aspect-ratio: 4 / 3; border: 1px solid var(--ink); background: #fff; overflow: hidden; position: relative; }
+.plate img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.04); transition: filter .5s, transform .9s cubic-bezier(.2,.7,.2,1); }
+.plate.fit img { object-fit: contain; padding: 4%; }
+.plate.top img { object-position: top; }
+.plate:hover img, .plate:focus-visible img { filter: none; transform: scale(1.035); }
+@media (hover: none) { .plate img { filter: none; } }
+@media (prefers-color-scheme: dark) { .plate .img { background: #e9e4dc; } .plate img { opacity: .93; } }
+.plate .cap { display: flex; justify-content: space-between; gap: 1em; margin-top: .9rem; color: var(--muted); }
+.plate .cap b { color: var(--accent-ink); font-weight: 500; }
+.plate h3 { font: 400 1.4rem/1.18 var(--serif); letter-spacing: -.012em; margin-top: .45rem; }
+.plate p { margin-top: .4rem; font-size: .95rem; line-height: 1.45; color: color-mix(in srgb, var(--ink) 76%, var(--paper)); }
+.plate:hover { color: inherit; }
+.plate:hover h3 { color: var(--accent-ink); }
+@media (max-width: 900px) { .plates { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .plates { grid-template-columns: 1fr; } }
+.more { margin-top: clamp(36px, 5vw, 60px); }
+
+/* contact */
+.contact h2 { max-width: 16ch; font-size: clamp(2.3rem, 6vw, 5rem); }
+.contact .actions { margin-top: clamp(2rem, 4vw, 3rem); }
+.notes { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-top: clamp(48px, 7vw, 90px); border-top: 1px solid var(--ink); }
+.notes div { padding: 1.4rem 2rem 0 0; }
+.notes div + div { padding-left: 2rem; border-left: 1px solid var(--line); }
+.notes .mono { color: var(--muted); margin-bottom: .7rem; }
+.notes p { max-width: 46ch; font-size: .98rem; }
+@media (max-width: 760px) {
+  .notes { grid-template-columns: 1fr; }
+  .notes div + div { padding-left: 0; border-left: 0; border-top: 1px solid var(--line); margin-top: 1.4rem; }
+}
+
+/* title block (legal entity) */
+footer { border-top: 1px solid var(--line); padding-block: clamp(56px, 8vw, 100px) clamp(54px, 7vw, 80px); }
+.titleblock { display: grid; grid-template-columns: 1.1fr 1fr 1fr; gap: 1px; background: var(--ink); border: 1px solid var(--ink); }
+.titleblock > div { padding: 1.1rem 1.3rem 1.25rem; background: var(--paper); min-width: 0; }
+.titleblock .brand { grid-row: span 2; display: flex; flex-direction: column; justify-content: space-between; gap: 1.6rem; }
+.titleblock .brand img { width: min(230px, 80%); }
+.titleblock dt { color: var(--muted); margin-bottom: .45rem; }
+.titleblock dd { font-size: .98rem; line-height: 1.4; overflow-wrap: anywhere; }
+.titleblock dd.big { font: 400 1.2rem/1.25 var(--serif); }
+.titleblock p { font-size: .9rem; line-height: 1.5; color: color-mix(in srgb, var(--ink) 78%, var(--paper)); }
+@media (max-width: 820px) {
+  .titleblock { grid-template-columns: 1fr 1fr; }
+  .titleblock .brand { grid-column: span 2; grid-row: auto; }
+  .titleblock > div:last-child { grid-column: span 2; }
+}
+@media (max-width: 520px) {
+  .titleblock { grid-template-columns: 1fr; }
+  .titleblock .brand, .titleblock > div:last-child { grid-column: auto; }
+}
+.colophon { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 40px; margin-top: 1.6rem; color: var(--muted); text-transform: none; letter-spacing: .03em; }
+.colophon p { max-width: 74ch; }
+
+/* reveal on scroll */
+.js .rv { opacity: 0; transform: translateY(18px); transition: opacity .9s cubic-bezier(.2,.7,.2,1), transform .9s cubic-bezier(.2,.7,.2,1); }
+.js .rv.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .js .rv { opacity: 1; transform: none; transition: none; }
+  .plate img, .btn::after { transition: none; }
+}
+@media print { .neatline, #relief { display: none; } .js .rv { opacity: 1; transform: none; } }
+</style>
+</head>
+<body>
+
+<div class="neatline" aria-hidden="true">
+  <span class="nl-tl">BIGC &middot; Sheet 01 of 01</span>
+  <span class="nl-tr" id="coords">06&deg;00&prime;N &nbsp;118&deg;00&prime;E</span>
+  <span class="nl-bl">bigc.science &middot; Scale 1:1</span>
+  <span class="nl-br"><b id="where">Title</b></span>
+</div>
+
+<header class="hero" id="top" data-name="Title">
+  <canvas id="relief" aria-hidden="true"></canvas>
+  <div class="wrap topbar">
+    <a href="#top" aria-label="Benny Istanto Geospatial Consulting">
+      <picture>
+        <source srcset="assets/bigc-logo-dark.png" media="(prefers-color-scheme: dark)">
+        <img src="assets/bigc-logo-light.png" width="900" height="471" alt="Benny Istanto Geospatial Consulting">
+      </picture>
+    </a>
+    <nav class="mono" aria-label="Sections">
+      <a href="#legend">Legend</a>
+      <a href="#record">Record</a>
+      <a href="#plates">Plates</a>
+      <a href="#contact" class="keep">Contact</a>
+    </nav>
+  </div>
+
+  <div class="wrap hero-main">
+    <p class="mono eyebrow">Climate science &times; geospatial technology</p>
+    <h1>Weather, land and risk, <em>drawn to scale.</em></h1>
+    <p class="lede"><strong>Benny Istanto Geospatial Consulting</strong> is a specialist practice bridging climate science and geospatial technology. We help organizations harness GIS, remote sensing and information management for precision agriculture, natural resource management and atmospheric resilience.</p>
+    <div class="actions">
+      <a class="btn mono" href="https://calendar.app.google/C2dHn7C3VyTtw8As6" target="_blank" rel="noopener">Schedule a consultation</a>
+      <a class="mono" href="mailto:benny@istan.to?subject=Consulting%20enquiry">benny@istan.to</a>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="facts">
+      <div><b>2004</b><span class="mono">Principal's first assignment</span></div>
+      <div><b>14</b><span class="mono">Institutions served</span></div>
+      <div><b>30+</b><span class="mono">World Bank projects supported</span></div>
+      <div><b>22</b><span class="mono">Countries covered for WFP Asia-Pacific</span></div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section id="legend" data-name="Legend">
+  <div class="wrap">
+    <div class="head rv">
+      <p class="mono"><b>&sect; 01</b> &middot; Legend</p>
+      <div>
+        <h2>Six kinds of work, <em>one symbol each.</em></h2>
+        <p>Every map explains itself in its legend. This is ours: what the practice does, and what you receive at the end of it.</p>
+      </div>
+    </div>
+
+    <ul class="legend">
+      <li class="rv">
+        <div class="swatch" aria-hidden="true"><svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="1"><path d="M-4 50C18 30 34 58 56 40S86 18 100 30"/><path d="M-4 38C16 18 36 46 58 28S88 6 100 16"/><path class="o" stroke-width="1.6" d="M-4 26C14 8 38 34 60 16S90-4 100 4"/><path d="M-4 62C20 44 32 70 54 52S84 30 100 44"/><ellipse cx="72" cy="48" rx="9" ry="5"/><ellipse cx="72" cy="48" rx="3" ry="1.6"/></svg></div>
+        <div>
+          <h3>Atmospheric Science &amp; Climate Risk</h3>
+          <p>Quantitative analytics to decipher climate patterns and strengthen environmental resilience.</p>
+        </div>
+        <div>
+          <p class="mono key">Deliverables</p>
+          <ul>
+            <li>Hydrometeorological monitoring systems</li>
+            <li>Agro-climatological modeling</li>
+            <li>Spatio-temporal climate analysis</li>
+            <li>Climate change impact assessments</li>
+            <li>Climate indices calculation and interpretation</li>
+          </ul>
+        </div>
+      </li>
+
+      <li class="rv">
+        <div class="swatch" aria-hidden="true"><svg viewBox="0 0 96 64" stroke="none" fill="currentColor"><g opacity=".12"><rect x="0" y="0" width="16" height="16"/><rect x="48" y="0" width="16" height="16"/><rect x="16" y="32" width="16" height="16"/><rect x="80" y="16" width="16" height="16"/><rect x="64" y="48" width="16" height="16"/></g><g opacity=".34"><rect x="16" y="0" width="16" height="16"/><rect x="0" y="16" width="16" height="16"/><rect x="64" y="0" width="16" height="16"/><rect x="32" y="48" width="16" height="16"/><rect x="80" y="32" width="16" height="16"/></g><g opacity=".7"><rect x="16" y="16" width="16" height="16"/><rect x="32" y="32" width="16" height="16"/><rect x="64" y="16" width="16" height="16"/><rect x="0" y="48" width="16" height="16"/></g><rect class="of" x="32" y="16" width="16" height="16"/><rect class="of" x="48" y="32" width="16" height="16"/><rect class="of" opacity=".55" x="48" y="16" width="16" height="16"/></svg></div>
+        <div>
+          <h3>GIS, Remote Sensing &amp; Spatial Modeling</h3>
+          <p>Transforming complex satellite imagery and spatial data into actionable visual intelligence.</p>
+        </div>
+        <div>
+          <p class="mono key">Deliverables</p>
+          <ul>
+            <li>Crop phenology and vegetation health monitoring</li>
+            <li>Land use change detection</li>
+            <li>Multi-criteria site suitability analysis</li>
+            <li>Nightlight analytics</li>
+            <li>Satellite image classification</li>
+          </ul>
+        </div>
+      </li>
+
+      <li class="rv">
+        <div class="swatch" aria-hidden="true"><svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="1"><path d="M10 6V54H90" /><path class="o" stroke-width="1.6" d="M10 54C24 26 40 16 88 13"/><g fill="currentColor" stroke="none"><circle cx="18" cy="43" r="1.8"/><circle cx="25" cy="30" r="1.8"/><circle cx="33" cy="27" r="1.8"/><circle cx="41" cy="18" r="1.8"/><circle cx="50" cy="20" r="1.8"/><circle cx="59" cy="13" r="1.8"/><circle cx="68" cy="17" r="1.8"/><circle cx="78" cy="11" r="1.8"/></g></svg></div>
+        <div>
+          <h3>Climate &amp; Geo-Statistics Data Processing</h3>
+          <p>Building robust pipelines for automated data management and rigorous scientific validation.</p>
+        </div>
+        <div>
+          <p class="mono key">Deliverables</p>
+          <ul>
+            <li>Automated ETL (Extract, Transform, Load) pipelines</li>
+            <li>Google Earth Engine workflows</li>
+            <li>Spatial Data Infrastructure (SDI) implementation</li>
+            <li>Database design and optimization</li>
+            <li>Geo-statistical modeling</li>
+          </ul>
+        </div>
+      </li>
+
+      <li class="rv">
+        <div class="swatch" aria-hidden="true"><svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="1"><circle cx="34" cy="34" r="44" opacity=".35"/><circle cx="34" cy="34" r="32" opacity=".55"/><circle cx="34" cy="34" r="20"/><circle class="o" stroke-width="1.6" cx="34" cy="34" r="9"/><circle class="of" stroke="none" cx="34" cy="34" r="2.6"/><path stroke-dasharray="2 3" d="M34 34L92 8"/></svg></div>
+        <div>
+          <h3>Impact Science &amp; Early Warning</h3>
+          <p>Frameworks that translate hazard data into anticipatory action and decision support.</p>
+        </div>
+        <div>
+          <p class="mono key">Deliverables</p>
+          <ul>
+            <li>Impact-based forecasting systems</li>
+            <li>Early Warning Early Action (EWEA) protocols</li>
+            <li>Hydro-meteorological risk profiling</li>
+            <li>Vulnerability assessments</li>
+            <li>Operational decision support tools</li>
+          </ul>
+        </div>
+      </li>
+
+      <li class="rv">
+        <div class="swatch" aria-hidden="true"><svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 50L34 14L58 44L82 12M12 50L58 44M34 14L82 12M58 44L86 54L82 12"/><g fill="var(--paper)"><circle cx="12" cy="50" r="3.2"/><circle cx="58" cy="44" r="3.2"/><circle cx="82" cy="12" r="3.2"/><circle cx="86" cy="54" r="3.2"/></g><circle class="of" stroke="none" cx="34" cy="14" r="4"/></svg></div>
+        <div>
+          <h3>Capacity Development</h3>
+          <p>Empowering teams with the technical skills to manage and analyze geospatial data independently.</p>
+        </div>
+        <div>
+          <p class="mono key">Deliverables</p>
+          <ul>
+            <li>QGIS and ArcGIS technical training</li>
+            <li>Python for geospatial analysis</li>
+            <li>Google Earth Engine bootcamps</li>
+            <li>Climate data processing workshops</li>
+            <li>Custom curriculum development</li>
+          </ul>
+        </div>
+      </li>
+
+      <li class="rv">
+        <div class="swatch" aria-hidden="true"><svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="1"><path stroke-dasharray="4 3" d="M10 52C26 50 30 30 46 30S62 14 78 14"/><circle cx="10" cy="52" r="3" fill="var(--paper)"/><path class="of" stroke="none" d="M78 4a7 7 0 0 1 7 7c0 5-7 12-7 12s-7-7-7-12a7 7 0 0 1 7-7z"/><path d="M56 54H88M56 51v6M72 51v6M88 51v6"/><path fill="currentColor" stroke="none" d="M56 53h16v2H56z"/></svg></div>
+        <div>
+          <h3>Proposal Development</h3>
+          <p>Structuring technical concepts into winning proposals for funding and project implementation.</p>
+        </div>
+        <div>
+          <p class="mono key">Deliverables</p>
+          <ul>
+            <li>Concept notes and logical frameworks</li>
+            <li>Methodology and technical approach design</li>
+            <li>Geospatial component integration</li>
+            <li>Resource and budget planning</li>
+            <li>Donor-specific technical documentation</li>
+          </ul>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<section id="record" data-name="Record of service">
+  <div class="wrap">
+    <div class="head rv">
+      <p class="mono"><b>&sect; 02</b> &middot; Record of service</p>
+      <div>
+        <h2>Two decades, <em>fourteen institutions.</em></h2>
+        <p>The company was incorporated in 2026. The record below is that of its principal, Benny Istanto, who has worked for these institutions as staff or consultant since 2004. Point at a line to read it.</p>
+      </div>
+    </div>
+
+    <div class="rv">
+      <div class="gantt" id="gantt">
+        <div class="g-axis" id="g-axis" aria-hidden="true"></div>
+        <div class="g-rows" id="g-rows"></div>
+      </div>
+      <div class="readout" id="readout" aria-live="polite">
+        <span class="mono">Reading</span>
+        <b>Select an institution</b>
+        <ul><li>Roles, projects and dates appear here.</li></ul>
+      </div>
+      <noscript><p class="aside-note">The timeline needs JavaScript. The full record is at <a href="https://benny.istan.to/works/experiences.html">benny.istan.to/works/experiences</a>.</p></noscript>
+      <p class="aside-note">Full detail, including the list of World Bank projects supported, is on the principal's site: <a href="https://benny.istan.to/works/experiences.html" target="_blank" rel="noopener">benny.istan.to/works/experiences</a>.</p>
+    </div>
+  </div>
+</section>
+
+<section id="plates" data-name="Plates">
+  <div class="wrap">
+    <div class="head rv">
+      <p class="mono"><b>&sect; 03</b> &middot; Plates</p>
+      <div>
+        <h2>Selected work, <em>2007 to 2026.</em></h2>
+        <p>It all begins with an idea, then it becomes something else. Nine pieces of the principal's work in earth observation, climate analysis and data science, each linked to its full write-up.</p>
+      </div>
+    </div>
+
+    <div class="plates">
+      <a class="plate rv fit" href="https://benny.istan.to/works/projects/2026-hybrid-bias-correction.html" target="_blank" rel="noopener">
+        <div class="img"><img src="assets/plates/hybrid-bc.jpg" width="930" height="930" loading="lazy" alt="Hybrid Bias Correction illustration"></div>
+        <div class="cap mono"><b>Plate 01</b><span>2026</span></div>
+        <h3>Hybrid Bias Correction</h3>
+        <p>Adjusting values, aligning distributions, preserving extremes in daily satellite precipitation. MSc thesis, IPB University.</p>
+      </a>
+      <a class="plate rv fit" href="https://benny.istan.to/works/projects/2025-precip-index.html" target="_blank" rel="noopener">
+        <div class="img"><img src="assets/plates/precip-index.jpg" width="960" height="960" loading="lazy" alt="precip-index illustration"></div>
+        <div class="cap mono"><b>Plate 02</b><span>2025</span></div>
+        <h3>precip-index</h3>
+        <p>SPI and SPEI for climate extremes monitoring. GOST, DEC Data Group, The World Bank.</p>
+      </a>
+      <a class="plate rv" href="https://benny.istan.to/works/projects/2021-extreme-rainfall-monitoring.html" target="_blank" rel="noopener">
+        <div class="img"><img src="assets/plates/erm.jpg" width="960" height="600" loading="lazy" alt="Extreme Rainfall Monitoring map of Indonesia"></div>
+        <div class="cap mono"><b>Plate 03</b><span>2016 - 2021</span></div>
+        <h3>Extreme Rainfall Monitoring</h3>
+        <p>Where extreme rainfall fell, and whether it will trigger a flood. WFP Indonesia.</p>
+      </a>
+      <a class="plate rv" href="https://benny.istan.to/works/projects/2016-vampire.html" target="_blank" rel="noopener">
+        <div class="img"><img src="assets/plates/vampire.jpg" width="960" height="549" loading="lazy" alt="VAMPIRE platform interface"></div>
+        <div class="cap mono"><b>Plate 04</b><span>2015 - 2018</span></div>
+        <h3>VAMPIRE</h3>
+        <p>Vulnerability Analysis and Monitoring Platform for Impact of Regional Events. WFP Indonesia.</p>
+      </a>
+      <a class="plate rv" href="https://benny.istan.to/works/projects/2015-fsva.html" target="_blank" rel="noopener">
+        <div class="img"><img src="assets/plates/fsva.jpg" width="960" height="609" loading="lazy" alt="Interactive Food Security and Vulnerability Atlas"></div>
+        <div class="cap mono"><b>Plate 05</b><span>2015</span></div>
+        <h3>Interactive FSVA</h3>
+        <p>The 2015 Food Security and Vulnerability Atlas of Indonesia, online. World Food Programme.</p>
+      </a>
+      <a class="plate rv" href="https://benny.istan.to/works/projects/2011-district-road-network.html" target="_blank" rel="noopener">
+        <div class="img"><img src="assets/plates/road-network.jpg" width="718" height="653" loading="lazy" alt="Aceh district road condition map"></div>
+        <div class="cap mono"><b>Plate 06</b><span>2011 - 2012</span></div>
+        <h3>Aceh Road Network</h3>
+        <p>District road network and condition, per 100 meters, in Pidie and Bireuen. International Labour Organization.</p>
+      </a>
+      <a class="plate rv top" href="https://benny.istan.to/works/projects/2009-cluster-atlas.html" target="_blank" rel="noopener">
+        <div class="img"><img src="assets/plates/cluster-atlas.jpg" width="882" height="960" loading="lazy" alt="Cluster Atlas cover, West Sumatra earthquake response"></div>
+        <div class="cap mono"><b>Plate 07</b><span>2009 - 2010</span></div>
+        <h3>Cluster Atlas</h3>
+        <p>West Sumatra Earthquake Response 2009. UN Office of the Humanitarian/Resident Coordinator.</p>
+      </a>
+      <a class="plate rv" href="https://benny.istan.to/works/projects/2008-aceh-fis.html" target="_blank" rel="noopener">
+        <div class="img"><img src="assets/plates/aceh-fis.jpg" width="960" height="960" loading="lazy" alt="Aceh Forest Information System process diagram"></div>
+        <div class="cap mono"><b>Plate 08</b><span>2008</span></div>
+        <h3>Aceh Forest Information System</h3>
+        <p>Forestry Information System user guides. Asian Development Bank, ETESP.</p>
+      </a>
+      <a class="plate rv" href="https://benny.istan.to/works/projects/2007-siske.html" target="_blank" rel="noopener">
+        <div class="img"><img src="assets/plates/siske.jpg" width="960" height="960" loading="lazy" alt="SISKe application splash screen"></div>
+        <div class="cap mono"><b>Plate 09</b><span>2006 - 2007</span></div>
+        <h3>SISKe</h3>
+        <p>Spatial Information System for Forest and Land Fire. South Sumatra Forest Fire Management Project.</p>
+      </a>
+    </div>
+
+    <p class="more rv"><a class="mono" href="https://benny.istan.to/works/projects.html" target="_blank" rel="noopener">All projects at benny.istan.to &rarr;</a></p>
+  </div>
+</section>
+
+<section id="contact" class="contact" data-name="Contact">
+  <div class="wrap">
+    <div class="head rv">
+      <p class="mono"><b>&sect; 04</b> &middot; Contact</p>
+      <div>
+        <h2>Tell us where <em>the question is.</em></h2>
+        <p>Schedule a consultation or write to discuss your project needs.</p>
+        <div class="actions">
+          <a class="btn mono" href="https://calendar.app.google/C2dHn7C3VyTtw8As6" target="_blank" rel="noopener">Schedule an appointment</a>
+          <a class="mono" href="mailto:benny@istan.to?subject=Book%20appointment%20for%20consulting%20service">benny@istan.to</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="notes rv">
+      <div>
+        <p class="mono">Smaller scopes</p>
+        <p>For smaller, fixed-scope work, a packaged gig is often the quickest way to get started. Services are also offered <a href="https://www.fiverr.com/bennyistanto" target="_blank" rel="noopener">via Fiverr</a>.</p>
+      </div>
+      <div>
+        <p class="mono">For students</p>
+        <p>If you are a student seeking advice on climate and geospatial problems, please save your budget. Post your question in the <a href="https://t.me/gis_id" target="_blank" rel="noopener">@gis_id</a> Telegram group and it will be answered there for free.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer id="entity" data-name="Title block">
+  <div class="wrap">
+    <dl class="titleblock rv">
+      <div class="brand">
+        <picture>
+          <source srcset="assets/bigc-logo-dark.png" media="(prefers-color-scheme: dark)">
+          <img src="assets/bigc-logo-light.png" width="900" height="471" loading="lazy" alt="Benny Istanto Geospatial Consulting">
+        </picture>
+        <p>Consulting work is contracted through a registered Indonesian company rather than in a personal capacity. A <i>perseroan perorangan</i> is a <i>badan hukum</i>: a legal entity in its own right, with assets and obligations separate from its owner's.</p>
+      </div>
+      <div><dt class="mono">Registered name</dt><dd class="big">PT Benny Istanto Geospatial Consulting</dd></div>
+      <div><dt class="mono">Legal form</dt><dd>Perseroan perorangan / single-shareholder limited company</dd></div>
+      <div><dt class="mono">NIB</dt><dd>2710260112177</dd></div>
+      <div><dt class="mono">Incorporation</dt><dd>Kepmenkum RI No. AHU-A133230.AH.01.30.Tahun 2026</dd></div>
+      <div><dt class="mono">Contact</dt><dd><a href="mailto:benny@istan.to">benny@istan.to</a></dd></div>
+      <div><dt class="mono">Principal</dt><dd><a href="https://benny.istan.to/" target="_blank" rel="noopener">Benny Istanto</a></dd></div>
+      <div><dt class="mono">Sheet</dt><dd>01 of 01 &middot; <a href="https://bigc.science/">bigc.science</a></dd></div>
+    </dl>
+    <div class="colophon mono">
+      <p>The margin reads this sheet as the Indonesian archipelago, roughly 6&deg;N to 11&deg;S and 95&deg;E to 141&deg;E: scroll to travel south, move the pointer to travel east. The contours are generated, not surveyed.</p>
+      <p>&copy; <span id="yr">2026</span> PT Benny Istanto Geospatial Consulting</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  /* ---- record of service ---- */
+  // [from, to] as [year, month]; to = null means present. Source: benny.istan.to/works/experiences
+  var NOW = (function () { var d = new Date(); return [d.getFullYear(), d.getMonth() + 1]; })();
+  var RECORD = [
+    { group: 'International development agencies' },
+    { name: 'The World Bank, GFDRR', roles: [
+      { f: [2025, 9], t: null, d: 'Data Scientist. Risk Data Library, Global Facility for Disaster Reduction and Recovery. Washington DC' }] },
+    { name: 'The World Bank, GOST', roles: [
+      { f: [2021, 9], t: null, d: 'Climate Geographer. GOST, Data Analytics and Tools, DEC Data Group. Washington DC' }] },
+    { name: 'UN World Food Programme', roles: [
+      { f: [2017, 1], t: [2021, 8], d: 'Earth Observation and Climate Analyst. Vulnerability Analysis and Mapping, Regional Asia and the Pacific' },
+      { f: [2012, 6], t: [2016, 12], d: 'GIS Officer. Vulnerability Analysis and Mapping, Indonesia' }] },
+    { name: 'UN International Labour Organization', roles: [
+      { f: [2011, 7], t: [2012, 6], d: 'GIS Officer. Capacity Building for Local Resource-based Road Works, Aceh' },
+      { f: [2011, 2], t: [2011, 5], d: 'GIS Consultant. Capacity Building for Local Resource-based Road Works, Aceh' }] },
+    { name: 'UN Office of the Humanitarian/Resident Coordinator', roles: [
+      { f: [2010, 5], t: [2010, 12], d: 'Information Management Officer. 2010 West Sumatra Recovery Network' }] },
+    { name: 'UN OCHA', roles: [
+      { f: [2009, 12], t: [2010, 4], d: 'GIS/IT Officer. 2009 West Sumatra Earthquake Response' }] },
+    { name: 'Asian Development Bank', roles: [
+      { f: [2009, 10], t: [2009, 12], d: 'GIS Modeler. Information Support for Management of Aceh’s Forest Resources, via SKM' },
+      { f: [2008, 7], t: [2009, 4], d: 'GIS Modeler. Information Support for Management of Aceh’s Forest Resources, via SECID' }] },
+    { name: 'United Nations Population Fund', roles: [
+      { f: [2009, 5], t: [2009, 9], d: 'Census Mapping Supervisor. 2010 Population and Housing Census in Timor-Leste' }] },
+    { name: 'European Union', roles: [
+      { f: [2008, 4], t: [2008, 4], d: 'Short-term Expert. South Sumatra Forest Fire Management Project, Palembang' },
+      { f: [2006, 10], t: [2006, 10], d: 'GIS Consultant. South Sumatra Forest Fire Management Project, Palembang' }] },
+    { name: 'Millennium Challenge Corporation', roles: [
+      { f: [2007, 8], t: [2007, 12], d: 'GIS Consultant. Indonesia Immunization Project, Jakarta' }] },
+    { group: 'Government of Indonesia and academia' },
+    { name: 'Ministry of Forestry', roles: [
+      { f: [2007, 8], t: [2008, 3], d: 'GIS Consultant. Four watershed assignments: Citarum-Ciliwung, Sampara, Jeneberang-Walanae, Ciliwung-Cisadane' }] },
+    { name: 'Government of Papua', roles: [
+      { f: [2007, 2], t: [2007, 5], d: 'GIS Consultant. Photogrammetrical study of Waropen district' }] },
+    { name: 'National Institute of Aeronautics and Space (LAPAN)', roles: [
+      { f: [2006, 4], t: [2007, 5], d: 'Research Assistant. Remotely-sensed information system for natural disaster mitigation, Jakarta' },
+      { f: [2005, 1], t: [2005, 12], d: 'Research Assistant. Energy balance on land use and land cover change in Java, Bandung' }] },
+    { name: 'Bogor Agricultural University', roles: [
+      { f: [2005, 8], t: [2007, 1], d: 'Lecturer Assistant. Satellite Meteorology and Satellite Climatology courses' }] },
+    { name: 'Agency for the Assessment and Application of Technology (BPPT)', roles: [
+      { f: [2004, 6], t: [2004, 12], d: 'Intern. GIS-based software design for climate data analysis and visualization, Jakarta' }] }
+  ];
+  var MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var Y0 = 2004, Y1 = NOW[0] + 1.4;
+  function pos(ym, end) { return ((ym[0] + (ym[1] - 1 + (end ? 1 : 0)) / 12) - Y0) / (Y1 - Y0) * 100; }
+  function fmt(r) {
+    var a = MON[r.f[1] - 1] + ' ' + r.f[0];
+    if (!r.t) return a + ' - present';
+    var b = MON[r.t[1] - 1] + ' ' + r.t[0];
+    return a === b ? a : a + ' - ' + b;
+  }
+  function el(tag, cls, txt) { var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
+
+  var rows = document.getElementById('g-rows'), axis = document.getElementById('g-axis'), readout = document.getElementById('readout');
+  for (var y = 2005; y < Y1; y += 5) { var tick = el('i', null, y); tick.style.left = pos([y, 1]) + '%'; axis.appendChild(tick); }
+  function show(item, row) {
+    var on = rows.querySelector('.on'); if (on) on.classList.remove('on');
+    row.classList.add('on');
+    readout.textContent = '';
+    readout.appendChild(el('span', 'mono', 'Reading'));
+    readout.appendChild(el('b', null, item.name));
+    var ul = el('ul');
+    item.roles.forEach(function (r) { var li = el('li'); li.appendChild(el('span', null, fmt(r))); li.appendChild(document.createTextNode(r.d)); ul.appendChild(li); });
+    readout.appendChild(ul);
+  }
+  RECORD.forEach(function (item) {
+    if (item.group) { rows.appendChild(el('div', 'g-group mono', item.group)); return; }
+    var row = el('div', 'g-row'); row.tabIndex = 0;
+    row.setAttribute('aria-label', item.name + ': ' + item.roles.map(function (r) { return fmt(r) + ', ' + r.d; }).join('; '));
+    row.appendChild(el('div', 'name', item.name));
+    var track = el('div', 'track');
+    item.roles.forEach(function (r) {
+      var bar = el('span', 'bar' + (r.t ? '' : ' now')), a = pos(r.f), b = pos(r.t || NOW, true);
+      bar.style.left = a + '%'; bar.style.width = (b - a) + '%';
+      track.appendChild(bar);
+    });
+    row.appendChild(track);
+    ['mouseenter', 'focus', 'click'].forEach(function (ev) { row.addEventListener(ev, function () { show(item, row); }); });
+    rows.appendChild(row);
+  });
+
+  /* ---- reveal + current section in the margin ---- */
+  var where = document.getElementById('where');
+  if ('IntersectionObserver' in window) {
+    var ro = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); ro.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -8% 0px' });
+    document.querySelectorAll('.rv').forEach(function (n) { ro.observe(n); });
+    var so = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) where.textContent = e.target.dataset.name; });
+    }, { rootMargin: '-45% 0px -45% 0px' });
+    document.querySelectorAll('[data-name]').forEach(function (n) { so.observe(n); });
+  } else {
+    document.querySelectorAll('.rv').forEach(function (n) { n.classList.add('in'); });
+  }
+
+  /* ---- margin coordinates: scroll travels south, pointer travels east ---- */
+  var coords = document.getElementById('coords'), px = .5, queued = false;
+  function dm(v, pos_, neg) {
+    var a = Math.abs(v), d = Math.floor(a), m = Math.floor((a - d) * 60);
+    return (d < 10 ? '0' : '') + d + '°' + (m < 10 ? '0' : '') + m + '′' + (v >= 0 ? pos_ : neg);
+  }
+  function readCoords() {
+    queued = false;
+    var max = document.documentElement.scrollHeight - innerHeight;
+    var p = max > 0 ? Math.min(1, Math.max(0, scrollY / max)) : 0;
+    if (p > .995) where.textContent = 'Title block';
+    coords.textContent = dm(6 - 17 * p, 'N', 'S') + ' ' + dm(95 + 46 * px, 'E', 'W');
+  }
+  function queue() { if (!queued) { queued = true; requestAnimationFrame(readCoords); } }
+  addEventListener('scroll', queue, { passive: true });
+  addEventListener('pointermove', function (e) { px = e.clientX / innerWidth; queue(); }, { passive: true });
+  readCoords();
+
+  /* ---- hero relief: animated contour lines (value noise + marching squares) ---- */
+  var cv = document.getElementById('relief'), ctx = cv.getContext('2d');
+  var W = 0, H = 0, cols = 0, rowsN = 0, CELL = 14, field = null, ink = '#2B2523', accent = '#F0881A';
+  var mx = -9999, my = -9999, tx = -9999, ty = -9999, visible = true, t0 = Math.random() * 100;
+  function hash(x, y, z) { var n = Math.sin(x * 127.1 + y * 311.7 + z * 74.7) * 43758.5453; return n - Math.floor(n); }
+  function sm(t) { return t * t * (3 - 2 * t); }
+  function noise(x, y, z) {
+    var xi = Math.floor(x), yi = Math.floor(y), zi = Math.floor(z);
+    var u = sm(x - xi), v = sm(y - yi), w = sm(z - zi);
+    function L(a, b, t) { return a + (b - a) * t; }
+    var a = L(L(hash(xi, yi, zi), hash(xi + 1, yi, zi), u), L(hash(xi, yi + 1, zi), hash(xi + 1, yi + 1, zi), u), v);
+    var b = L(L(hash(xi, yi, zi + 1), hash(xi + 1, yi, zi + 1), u), L(hash(xi, yi + 1, zi + 1), hash(xi + 1, yi + 1, zi + 1), u), v);
+    return L(a, b, w);
+  }
+  function palette() {
+    var cs = getComputedStyle(document.documentElement);
+    ink = cs.getPropertyValue('--ink').trim() || ink;
+    accent = cs.getPropertyValue('--accent').trim() || accent;
+  }
+  function resize() {
+    var r = cv.getBoundingClientRect(), dpr = Math.min(devicePixelRatio || 1, 2);
+    W = r.width; H = r.height;
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    CELL = W < 700 ? 12 : 15;
+    cols = Math.ceil(W / CELL) + 1; rowsN = Math.ceil(H / CELL) + 1;
+    field = new Float32Array(cols * rowsN);
+  }
+  function draw(time) {
+    var z = t0 + time * 0.00004, S = 1 / (W < 700 ? 170 : 250), i, j, k;
+    if (tx > -9000) { mx += (tx - mx) * .06; my += (ty - my) * .06; }
+    for (j = 0; j < rowsN; j++) for (i = 0; i < cols; i++) {
+      var x = i * CELL, y = j * CELL;
+      var v = .68 * noise(x * S, y * S, z) + .32 * noise(x * S * 2.3 + 40, y * S * 2.3, z * 1.6 + 9);
+      if (mx > -9000) { var dx = x - mx, dy = y - my; v += .14 * Math.exp(-(dx * dx + dy * dy) / 42000); }
+      field[j * cols + i] = v;
+    }
+    ctx.clearRect(0, 0, W, H);
+    ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    for (k = 0; k < 15; k++) {
+      var Lv = .2 + k * .045, hot = k === 9, idx = k % 4 === 1;
+      ctx.beginPath();
+      for (j = 0; j < rowsN - 1; j++) for (i = 0; i < cols - 1; i++) {
+        var a = field[j * cols + i], b = field[j * cols + i + 1], c = field[(j + 1) * cols + i + 1], d = field[(j + 1) * cols + i];
+        var m = (a > Lv ? 8 : 0) | (b > Lv ? 4 : 0) | (c > Lv ? 2 : 0) | (d > Lv ? 1 : 0);
+        if (m === 0 || m === 15) continue;
+        var X = i * CELL, Y = j * CELL;
+        var Tx = X + CELL * (Lv - a) / (b - a), Ry = Y + CELL * (Lv - b) / (c - b);
+        var Bx = X + CELL * (Lv - d) / (c - d), Ly = Y + CELL * (Lv - a) / (d - a);
+        switch (m) {
+          case 1: case 14: ctx.moveTo(X, Ly); ctx.lineTo(Bx, Y + CELL); break;
+          case 2: case 13: ctx.moveTo(Bx, Y + CELL); ctx.lineTo(X + CELL, Ry); break;
+          case 3: case 12: ctx.moveTo(X, Ly); ctx.lineTo(X + CELL, Ry); break;
+          case 4: case 11: ctx.moveTo(Tx, Y); ctx.lineTo(X + CELL, Ry); break;
+          case 6: case 9: ctx.moveTo(Tx, Y); ctx.lineTo(Bx, Y + CELL); break;
+          case 7: case 8: ctx.moveTo(Tx, Y); ctx.lineTo(X, Ly); break;
+          case 5: ctx.moveTo(Tx, Y); ctx.lineTo(X + CELL, Ry); ctx.moveTo(X, Ly); ctx.lineTo(Bx, Y + CELL); break;
+          case 10: ctx.moveTo(Tx, Y); ctx.lineTo(X, Ly); ctx.moveTo(Bx, Y + CELL); ctx.lineTo(X + CELL, Ry); break;
+        }
+      }
+      ctx.strokeStyle = hot ? accent : ink;
+      ctx.globalAlpha = hot ? .95 : idx ? .5 : .24;
+      ctx.lineWidth = hot ? 1.5 : idx ? 1.1 : .8;
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  }
+  var last = 0;
+  function loop(time) {
+    if (visible && time - last > 32) { last = time; draw(time); }
+    requestAnimationFrame(loop);
+  }
+  palette(); resize(); draw(0);
+  var rt; addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(function () { resize(); draw(last); }, 120); });
+  var mq = window.matchMedia('(prefers-color-scheme: dark)');
+  (mq.addEventListener ? mq.addEventListener.bind(mq, 'change') : mq.addListener.bind(mq))(function () { palette(); draw(last); });
+  if (!reduce) {
+    document.querySelector('.hero').addEventListener('pointermove', function (e) {
+      var r = cv.getBoundingClientRect(); tx = e.clientX - r.left; ty = e.clientY - r.top;
+      if (mx < -9000) { mx = tx; my = ty; }
+    }, { passive: true });
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { visible = es[0].isIntersecting; }).observe(cv);
+    document.addEventListener('visibilitychange', function () { if (document.hidden) visible = false; else visible = cv.getBoundingClientRect().bottom > 0; });
+    requestAnimationFrame(loop);
+  }
+})();
+</script>
+</body>
+</html>
