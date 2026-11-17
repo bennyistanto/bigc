@@ -31,7 +31,15 @@
   "founder": { "@type": "Person", "name": "Benny Istanto", "url": "https://benny.istan.to/" }
 }
 </script>
-<script>document.documentElement.classList.add('js');</script>
+<script>
+(function () {
+  var d = document.documentElement, t = null;
+  d.classList.add('js');
+  try { t = localStorage.getItem('theme'); } catch (e) {}
+  if (t !== 'light' && t !== 'dark') t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  d.setAttribute('data-theme', t);
+})();
+</script>
 <style>
 :root {
   --paper: #F4EFE6;
@@ -47,15 +55,13 @@
   --pad: clamp(28px, 6vw, 84px);
   --frame: 12px;
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    --paper: #171412;
-    --paper-2: #1F1B18;
-    --ink: #EDE6DA;
-    --muted: #9E9389;
-    --line: rgba(237, 230, 218, .17);
-    --accent-ink: #F59A36;
-  }
+:root[data-theme="dark"] {
+  --paper: #171412;
+  --paper-2: #1F1B18;
+  --ink: #EDE6DA;
+  --muted: #9E9389;
+  --line: rgba(237, 230, 218, .17);
+  --accent-ink: #F59A36;
 }
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
@@ -115,9 +121,13 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .topbar { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-top: clamp(34px, 5vw, 56px); }
 .topbar img { height: clamp(58px, 7vw, 84px); width: auto; }
-.topbar nav { display: flex; gap: clamp(14px, 2.4vw, 34px); }
+.topbar nav { display: flex; align-items: center; gap: clamp(14px, 2.4vw, 34px); }
 .topbar nav a { text-decoration: none; padding: .5em 0; border-bottom: 1px solid transparent; }
 .topbar nav a:hover { border-bottom-color: var(--accent); }
+.theme { all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: .6em; padding: .5em 0; font: 400 .72rem/1.4 var(--mono); letter-spacing: .09em; text-transform: uppercase; }
+.theme i { width: 11px; height: 11px; border-radius: 50%; border: 1px solid var(--ink); background: linear-gradient(90deg, var(--ink) 50%, transparent 50%); transition: transform .4s; }
+.theme:hover { color: var(--accent-ink); } .theme:hover i { transform: rotate(180deg); }
+.theme:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 @media (max-width: 640px) { .topbar nav a:not(.keep) { display: none; } }
 
 .hero-main { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-block: clamp(48px, 8vw, 96px); }
@@ -231,7 +241,9 @@ h2 em { font-weight: 300; color: var(--accent-ink); }
 .plate.top img { object-position: top; }
 .plate:hover img, .plate:focus-visible img { filter: none; transform: scale(1.035); }
 @media (hover: none) { .plate img { filter: none; } }
-@media (prefers-color-scheme: dark) { .plate .img { background: #e9e4dc; } .plate img { opacity: .93; } }
+[data-theme="dark"] .plate .img { background: #e9e4dc; } [data-theme="dark"] .plate img { opacity: .93; }
+.logo-d, [data-theme="dark"] .logo-l { display: none; }
+[data-theme="dark"] .logo-d { display: block; }
 .plate .cap { display: flex; justify-content: space-between; gap: 1em; margin-top: .9rem; color: var(--muted); }
 .plate .cap b { color: var(--accent-ink); font-weight: 500; }
 .plate h3 { font: 400 1.4rem/1.18 var(--serif); letter-spacing: -.012em; margin-top: .45rem; }
@@ -301,16 +313,14 @@ footer { border-top: 1px solid var(--line); padding-block: clamp(56px, 8vw, 100p
   <canvas id="relief" aria-hidden="true"></canvas>
   <div class="wrap topbar">
     <a href="#top" aria-label="Benny Istanto Geospatial Consulting">
-      <picture>
-        <source srcset="assets/bigc-logo-dark.png" media="(prefers-color-scheme: dark)">
-        <img src="assets/bigc-logo-light.png" width="900" height="471" alt="Benny Istanto Geospatial Consulting">
-      </picture>
+      <img class="logo-l" src="assets/bigc-logo-light.png" width="900" height="471" alt="Benny Istanto Geospatial Consulting"><img class="logo-d" src="assets/bigc-logo-dark.png" width="900" height="471" alt="Benny Istanto Geospatial Consulting">
     </a>
     <nav class="mono" aria-label="Sections">
       <a href="#legend">Legend</a>
       <a href="#record">Record</a>
       <a href="#plates">Plates</a>
       <a href="#contact" class="keep">Contact</a>
+      <button type="button" class="theme mono" id="theme" aria-label="Switch colour theme"><i aria-hidden="true"></i><span>Dark</span></button>
     </nav>
   </div>
 
@@ -526,7 +536,7 @@ footer { border-top: 1px solid var(--line); padding-block: clamp(56px, 8vw, 100p
         <p>The 2015 Food Security and Vulnerability Atlas of Indonesia, online. World Food Programme.</p>
       </a>
       <a class="plate rv" href="https://benny.istan.to/works/projects/2011-district-road-network.html" target="_blank" rel="noopener">
-        <div class="img"><img src="assets/plates/road-network.jpg" width="718" height="653" loading="lazy" alt="Aceh district road condition map"></div>
+        <div class="img"><img src="assets/plates/aceh-roads.jpg" width="718" height="653" loading="lazy" alt="Aceh district road condition map"></div>
         <div class="cap mono"><b>Plate 06</b><span>2011 - 2012</span></div>
         <h3>Aceh Road Network</h3>
         <p>District road network and condition, per 100 meters, in Pidie and Bireuen. International Labour Organization.</p>
@@ -588,10 +598,7 @@ footer { border-top: 1px solid var(--line); padding-block: clamp(56px, 8vw, 100p
   <div class="wrap">
     <dl class="titleblock rv">
       <div class="brand">
-        <picture>
-          <source srcset="assets/bigc-logo-dark.png" media="(prefers-color-scheme: dark)">
-          <img src="assets/bigc-logo-light.png" width="900" height="471" loading="lazy" alt="Benny Istanto Geospatial Consulting">
-        </picture>
+        <img class="logo-l" src="assets/bigc-logo-light.png" width="900" height="471" loading="lazy" alt="Benny Istanto Geospatial Consulting"><img class="logo-d" src="assets/bigc-logo-dark.png" width="900" height="471" loading="lazy" alt="Benny Istanto Geospatial Consulting">
         <p>Consulting work is contracted through a registered Indonesian company rather than in a personal capacity. A <i>perseroan perorangan</i> is a <i>badan hukum</i>: a legal entity in its own right, with assets and obligations separate from its owner's.</p>
       </div>
       <div><dt class="mono">Registered name</dt><dd class="big">PT Benny Istanto Geospatial Consulting</dd></div>
@@ -803,8 +810,20 @@ footer { border-top: 1px solid var(--line); padding-block: clamp(56px, 8vw, 100p
   }
   palette(); resize(); draw(0);
   var rt; addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(function () { resize(); draw(last); }, 120); });
+  var root = document.documentElement, tbtn = document.getElementById('theme');
+  function setTheme(t, save) {
+    root.setAttribute('data-theme', t);
+    tbtn.querySelector('span').textContent = t === 'dark' ? 'Light' : 'Dark';
+    if (save) { try { localStorage.setItem('theme', t); } catch (e) {} }
+    palette(); draw(last);
+  }
+  setTheme(root.getAttribute('data-theme') || 'light', false);
+  tbtn.addEventListener('click', function () { setTheme(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark', true); });
   var mq = window.matchMedia('(prefers-color-scheme: dark)');
-  (mq.addEventListener ? mq.addEventListener.bind(mq, 'change') : mq.addListener.bind(mq))(function () { palette(); draw(last); });
+  (mq.addEventListener ? mq.addEventListener.bind(mq, 'change') : mq.addListener.bind(mq))(function (e) {
+    var saved = null; try { saved = localStorage.getItem('theme'); } catch (err) {}
+    if (!saved) setTheme(e.matches ? 'dark' : 'light', false);
+  });
   if (!reduce) {
     document.querySelector('.hero').addEventListener('pointermove', function (e) {
       var r = cv.getBoundingClientRect(); tx = e.clientX - r.left; ty = e.clientY - r.top;
